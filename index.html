@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>GITE_NV — The Modern GitHub Environment, Secrets & SSH Deploy Key Orchestrator</title>
+  <meta name="title" content="GITE_NV — The Modern GitHub Environment, Secrets & SSH Deploy Key Orchestrator" />
+  <meta name="description" content="Manage, sync, and deploy GitHub repository environments, encrypted secrets, variables, and SSH deploy keys instantly. Available as a Windows Desktop App with local SQLite persistence and a Chrome/Edge Extension." />
+  <meta name="keywords" content="github environment manager, github secrets manager, github deploy keys, github actions secrets sync, vps deploy script, github ssh keys, github profiles, devops tools, cicd configuration, electron sqlite desktop app" />
+  <meta name="author" content="GITE_NV" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="theme-color" content="#090a0f" />
+  <link rel="canonical" href="https://nourddinak.github.io/GITE_NV-releases/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nourddinak.github.io/GITE_NV-releases/" />
+  <meta property="og:title" content="GITE_NV — The Modern GitHub Environment, Secrets & SSH Deploy Key Orchestrator" />
+  <meta property="og:description" content="Deploy GitHub repository environments, encrypted secrets, and SSH deploy keys with 1-click. Windows Desktop App with local SQLite & Chrome Extension." />
+  <meta property="og:image" content="logo.webp" />
+  <meta property="og:site_name" content="GITE_NV" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://nourddinak.github.io/GITE_NV-releases/" />
+  <meta property="twitter:title" content="GITE_NV — The Modern GitHub Environment, Secrets & SSH Deploy Key Orchestrator" />
+  <meta property="twitter:description" content="Deploy GitHub repository environments, encrypted secrets, and SSH deploy keys with 1-click. Windows Desktop App with local SQLite & Chrome Extension." />
+  <meta property="twitter:image" content="logo.webp" />
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/webp" href="logo.webp" />
+  <link rel="apple-touch-icon" href="logo.webp" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- JSON-LD Structured Data for Top Search Rank -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GITE_NV",
+    "operatingSystem": "Windows 10, Windows 11, Chrome, Edge",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Save reusable GitHub repository configuration profiles, encrypted secrets, and SSH deploy keys, syncing across multiple repos instantly.",
+    "softwareVersion": "0.0.2",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "GITE_NV"
+    },
+    "featureList": [
+      "Local ACID SQLite Database Storage in %APPDATA%",
+      "Automated VPS Setup & Auto-Discovery Script",
+      "Per-Repo and Account-Scoped Deploy Keys",
+      "Default-to-Secret Masking and libsodium Encryption",
+      "Zero Data Loss Protection on Updates and Cache Clears"
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-main: #090a0f;
+      --bg-surface: #10131c;
+      --bg-surface-elevated: #161b27;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-bright: rgba(255, 255, 255, 0.16);
+      --border-accent: rgba(16, 185, 129, 0.35);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.2);
+      --cyan: #38bdf8;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Custom Modern Slim Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-bright);
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--emerald);
+    }
+    ::-webkit-scrollbar-button {
+      display: none !important;
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-bright) transparent;
+    }
+
+    /* Background Ambient Gradients */
+    .ambient-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1200px;
+      height: 600px;
+      background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.12) 0%, rgba(56, 189, 248, 0.06) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at 50% 250px, black 30%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(9, 10, 15, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-bright);
+      padding: 3px;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .brand-title {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-tag {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border: 1px solid var(--border-accent);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #090a0f;
+      border: 1px solid #ffffff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-primary:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 25px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-emerald {
+      background: var(--emerald);
+      color: #041f14;
+      border: 1px solid var(--emerald);
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-emerald:hover {
+      background: #34d399;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 28px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-bright);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-elevated);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .announcement-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--emerald);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      margin-bottom: 28px;
+      transition: border-color 0.2s;
+    }
+
+    .announcement-pill:hover {
+      border-color: var(--emerald);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+      margin-bottom: 24px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      color: var(--text-muted);
+      max-width: 740px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .trust-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+    }
+
+    .trust-badge-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .trust-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+
+    /* Terminal Showcase */
+    .terminal-card {
+      margin: 30px auto 60px;
+      max-width: 860px;
+      background: #0b0d14;
+      border: 1px solid var(--border-bright);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(16, 185, 129, 0.06);
+      text-align: left;
+    }
+
+    .terminal-header {
+      background: #11141f;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #eab308; }
+    .dot-green { background: #22c55e; }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-bright);
+      color: var(--text-main);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .term-prompt {
+      color: var(--emerald);
+      user-select: none;
+    }
+
+    .term-cmd {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .term-comment {
+      color: var(--text-dim);
+      margin-top: 10px;
+      font-size: 0.8rem;
+    }
+
+    /* Features Grid */
+    .section-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 50px;
+    }
+
+    .section-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--emerald);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 90px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-glow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .feature-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--emerald);
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+      margin: 80px 0;
+    }
+
+    .comparison-table-wrapper {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+      min-width: 600px;
+    }
+
+    .comparison-table th, 
+    .comparison-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-table th {
+      background: rgba(255, 255, 255, 0.02);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .th-highlight {
+      color: var(--emerald) !important;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-check {
+      color: var(--emerald);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-warn {
+      color: #f59e0b;
+      font-size: 0.85rem;
+    }
+
+    /* Downloads Cards */
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 40px 0 90px;
+    }
+
+    .download-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .download-box.recommended {
+      border-color: var(--border-accent);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, var(--bg-surface) 100%);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+    }
+
+    .download-box:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+    }
+
+    .download-top {
+      margin-bottom: 20px;
+    }
+
+    .download-pill {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .pill-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border: 1px solid var(--border-accent);
+    }
+
+    .pill-blue {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .download-box h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+
+    .download-box p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .download-meta {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 14px;
+    }
+
+    /* FAQ */
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto 90px;
+    }
+
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-bright);
+    }
+
+    .faq-question {
+      padding: 18px 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.96rem;
+      user-select: none;
+    }
+
+    .faq-arrow {
+      transition: transform 0.25s ease;
+      color: var(--text-dim);
+    }
+
+    .faq-item.active .faq-arrow {
+      transform: rotate(180deg);
+      color: var(--emerald);
+    }
+
+    .faq-answer {
+      padding: 0 22px 18px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      display: none;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 50px 0 35px;
+      background: #06070a;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-main);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hero-title {
+        font-size: 2.2rem;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow & Pattern -->
+  <div class="ambient-glow"></div>
+  <div class="grid-pattern"></div>
+
+  <!-- Header / Navbar -->
+  <header>
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="#" class="logo-container">
+          <img src="logo.webp" alt="GITE_NV Official Logo" class="logo-img" />
+          <span class="brand-title">GITE_NV <span class="version-tag">v0.0.2</span></span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#vps-script">VPS Auto-Script</a></li>
+            <li><a href="#comparison">Desktop vs Extension</a></li>
+            <li><a href="#downloads">Downloads</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <a href="https://github.com/nourddinak/GITE_NV" target="_blank" rel="noopener" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#downloads" class="btn btn-emerald">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Get Desktop App
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="announcement-pill">
+          <span>✨ New Release</span>
+          <span>•</span>
+          <span>v0.0.2 Windows Desktop + Chrome Extension</span>
+        </div>
+
+        <h1 class="hero-title">
+          Sync GitHub Environments, Secrets & Deploy Keys <span class="gradient-text">with Zero Friction.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Save reusable configuration profiles for your microservices and applications. Featuring <strong>100% permanent local SQLite storage</strong> in <code>%APPDATA%</code>, automated VPS auto-discovery, and instant 1-click deployments to any GitHub repository.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases/latest/download/GITE_NV-Portable-0.0.2.exe" download class="btn btn-emerald" onclick="trackEvent('download_portable_hero')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Portable (.exe)
+          </a>
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases/latest/download/GITE_NV.Setup.0.0.2.exe" download class="btn btn-primary" onclick="trackEvent('download_setup_hero')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            Download Windows Installer
+          </a>
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases/latest" target="_blank" rel="noopener" class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View GitHub Releases
+          </a>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-badge-item">
+            <span class="trust-dot"></span>
+            <span>Permanent Local SQLite DB</span>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-dot"></span>
+            <span>Zero Data Loss on Updates</span>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-dot"></span>
+            <span>Client-side libsodium Encryption</span>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-dot"></span>
+            <span>100% Free & Standalone</span>
+          </div>
+        </div>
+
+        <!-- Terminal Showcase -->
+        <div id="vps-script" class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <span class="terminal-title">VPS Setup & Auto-Discovery Script</span>
+            <button id="copyScriptBtn" class="copy-btn" onclick="copyVpsScript()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="copyBtnText">Copy Command</span>
+            </button>
+          </div>
+          <div class="terminal-body">
+            <div>
+              <span class="term-prompt">user@vps:~$</span>
+              <span class="term-cmd">bash &lt;(curl -fsSL https://raw.githubusercontent.com/nourddinak/SCRIPTS/main/setup-github.sh)</span>
+            </div>
+            <div class="term-comment">
+              # ⚡ Automatically detects VPS IP, current username, SSH private key, and generates<br/>
+              # a dedicated GitHub Actions SSH deploy key. Paste the output into GITE_NV to auto-populate everything!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container">
+      <div class="section-header">
+        <span class="section-pill">ENGINEERING EXCELLENCE</span>
+        <h2 class="section-title">Built for Modern DevOps & Full-Stack Developers</h2>
+        <p class="section-desc">Stop re-typing API tokens, database connection strings, and SSH keys for every repo. Profile once, deploy anywhere.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <h3>Local SQLite Persistence</h3>
+          <p>The desktop edition stores all data directly in <code>%APPDATA%\GITE_NV\gite_nv.db</code> using embedded SQLite. Your data is 100% durable and never deleted during updates or cache wipes.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Default-to-Secret Masking</h3>
+          <p>Security by default. All parsed environment variables and credentials automatically default to write-only encrypted secrets, eliminating accidental exposure in public repository logs.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <h3>Dual-Scope Deploy Keys</h3>
+          <p>Choose between <strong>Per-Repo Deploy Keys</strong> (isolated access for a single repo) or <strong>Account SSH Keys</strong> (registered once on your GitHub account to access all repos).</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Smart Import & Auto-Detect</h3>
+          <p>Paste raw text, <code>.env</code> files, multiline RSA/ED25519 private keys, or VPS script outputs. GITE_NV auto-parses, categorizes, and formats every entry in real time.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <h3>Multi-Environment Profiles</h3>
+          <p>Manage isolated profiles for Production, Staging, and Preview environments with distinct tokens, ports, and domains. Deploy all variables with a single click.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-glow"></div>
+          <div class="feature-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Encrypted Backup & Portability</h3>
+          <p>Export all profile definitions to client-side password-encrypted JSON backups using libsodium. Seamlessly migrate between the Extension and Desktop App in seconds.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="container comparison-section">
+      <div class="section-header">
+        <span class="section-pill">EDITIONS BREAKDOWN</span>
+        <h2 class="section-title">Browser Extension vs Desktop Edition</h2>
+        <p class="section-desc">Choose the right edition for your daily workflow. Both work with your GitHub account seamlessly.</p>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>CAPABILITY</th>
+              <th>CHROME EXTENSION</th>
+              <th class="th-highlight">WINDOWS DESKTOP APP (RECOMMENDED)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Storage Engine</strong></td>
+              <td>Browser Quota / IndexedDB</td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Embedded SQLite in %APPDATA%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Data Loss Risk</strong></td>
+              <td><span class="badge-warn">⚠️ At risk if browser cache is cleared</span></td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> 100% Durable — Updates never touch DB</span></td>
+            </tr>
+            <tr>
+              <td><strong>Window Experience</strong></td>
+              <td>Browser tab or small popup</td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Dedicated frameless window & taskbar icon</span></td>
+            </tr>
+            <tr>
+              <td><strong>Performance</strong></td>
+              <td>Shared browser process</td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> High-speed 64-bit native engine</span></td>
+            </tr>
+            <tr>
+              <td><strong>Offline Capabilities</strong></td>
+              <td>Only while browser runs</td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Standalone instant-launch execution</span></td>
+            </tr>
+            <tr>
+              <td><strong>Custom UI Scrollbars</strong></td>
+              <td>Custom slim UI scrollbars</td>
+              <td><span class="badge-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Integrated custom slim dark UI scrollbars</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Downloads Center -->
+    <section id="downloads" class="container">
+      <div class="section-header">
+        <span class="section-pill">DIRECT DOWNLOADS</span>
+        <h2 class="section-title">Download GITE_NV v0.0.2</h2>
+        <p class="section-desc">Standalone, signed executables and extension packages ready for immediate use.</p>
+      </div>
+
+      <div class="downloads-grid">
+        <!-- Portable -->
+        <div class="download-box recommended">
+          <div class="download-top">
+            <span class="download-pill pill-green">RECOMMENDED • ZERO INSTALL</span>
+            <h3>Windows Portable (.exe)</h3>
+            <p>Single standalone executable file. Double-click and run immediately without administrator privileges or installation.</p>
+            <div class="download-meta">File: GITE_NV-Portable-0.0.2.exe (~120 MB)</div>
+          </div>
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases/latest/download/GITE_NV-Portable-0.0.2.exe" download class="btn btn-emerald" onclick="trackEvent('download_box_portable')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Portable (.exe)
+          </a>
+        </div>
+
+        <!-- Setup Installer -->
+        <div class="download-box">
+          <div class="download-top">
+            <span class="download-pill pill-blue">FULL SYSTEM INTEGRATION</span>
+            <h3>Windows Setup (.exe)</h3>
+            <p>Standard NSIS setup installer. Adds Start Menu and Desktop shortcuts with seamless auto-updates and system tray integration.</p>
+            <div class="download-meta">File: GITE_NV Setup 0.0.2.exe (~120 MB)</div>
+          </div>
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases/latest/download/GITE_NV.Setup.0.0.2.exe" download class="btn btn-secondary" onclick="trackEvent('download_box_setup')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            Download Setup Installer
+          </a>
+        </div>
+
+        <!-- GitHub Release Hub -->
+        <div class="download-box">
+          <div class="download-top">
+            <span class="download-pill pill-blue">PUBLIC RELEASE HUB</span>
+            <h3>GitHub Releases</h3>
+            <p>Direct access to all tagged releases, release notes, binary signatures, changelogs, and verification hashes.</p>
+            <div class="download-meta">Repository: nourddinak/GITE_NV-releases</div>
+          </div>
+          <a href="https://github.com/nourddinak/GITE_NV-releases/releases" target="_blank" rel="noopener" class="btn btn-secondary" onclick="trackEvent('view_github_releases')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Browse All Releases
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="container">
+      <div class="section-header">
+        <span class="section-pill">COMMON INQUIRIES</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Where is my data stored in the Windows Desktop App?</span>
+            <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Your data is stored in a native ACID-compliant SQLite database file located at <code>%APPDATA%\GITE_NV\gite_nv.db</code>. It lives completely on your local computer and is never wiped during updates or uninstallations.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>How do I migrate my profiles from the Extension to the Desktop App?</span>
+            <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            In the extension, open Settings and click <strong>Export Encrypted Backup</strong>. Set a passphrase and save the JSON file. Then, open the Desktop App, click <strong>Import & Merge</strong>, enter your passphrase, and your profiles, deploy keys, and tokens are instantly imported.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>What does the VPS Auto-Discovery script do?</span>
+            <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            The command <code>bash &lt;(curl -fsSL https://raw.githubusercontent.com/nourddinak/SCRIPTS/main/setup-github.sh)</code> executes a safe read-only discovery script on your Linux server. It detects your public IP, username, and SSH setup, creates an isolated deployment key, and prints out key-value pairs formatted specifically for GITE_NV's smart parser.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Does GITE_NV send my credentials or tokens to any external server?</span>
+            <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            No. GITE_NV communicates <strong>exclusively</strong> with the official GitHub REST API (<code>api.github.com</code>) using your personal token. There is zero telemetry, no tracking server, and no third-party cloud database.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--text-main);">GITE_NV</span>
+        <span>— Advanced GitHub Environment, Secrets & SSH Deploy Key Orchestrator.</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#downloads">Downloads</a></li>
+        <li><a href="https://github.com/nourddinak/GITE_NV" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="#vps-script">VPS Script</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript & Analytics Tracker -->
+  <script>
+    // Copy VPS Script with Visual Feedback
+    const VPS_COMMAND = "bash <(curl -fsSL https://raw.githubusercontent.com/nourddinak/SCRIPTS/main/setup-github.sh)";
+
+    function copyVpsScript() {
+      navigator.clipboard.writeText(VPS_COMMAND).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        const originalText = btnText.innerText;
+        btnText.innerText = 'Copied!';
+        btnText.style.color = '#10b981';
+        trackEvent('vps_script_copied');
+        setTimeout(() => {
+          btnText.innerText = originalText;
+          btnText.style.color = '';
+        }, 2200);
+      });
+    }
+
+    // Interactive FAQ Accordion
+    function toggleFaq(element) {
+      const isActive = element.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+      if (!isActive) {
+        element.classList.add('active');
+      }
+    }
+
+    // Built-in Privacy-Friendly Analytics Event Tracker
+    function trackEvent(eventName, eventParams = {}) {
+      try {
+        const payload = {
+          event: eventName,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          referrer: document.referrer || 'direct',
+          ...eventParams
+        };
+
+        // If Google Analytics / Gtag is present
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', eventName, eventParams);
+        }
+
+        // Store local telemetry for testing & inspection
+        const events = JSON.parse(localStorage.getItem('gite_nv_events') || '[]');
+        events.push(payload);
+        if (events.length > 50) events.shift();
+        localStorage.setItem('gite_nv_events', JSON.stringify(events));
+
+        console.log('[Analytics Event Tracked]:', eventName, payload);
+      } catch (err) {
+        // Silent catch for privacy blockers
+      }
+    }
+
+    // Track Page View on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      trackEvent('page_view', { page_title: document.title });
+    });
+  </script>
+</body>
+</html>

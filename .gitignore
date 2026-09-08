@@ -1,0 +1,44 @@
+# ==============================================================================
+# GITE_NV Releases Repository .gitignore
+# ==============================================================================
+# Executables and large archives (>100MB) MUST NOT be committed to git.
+# Attach them to GitHub Releases (e.g. `gh release create v0.0.2`) instead.
+# ==============================================================================
+
+# Executables & Installers
+*.exe
+*.msi
+*.dmg
+*.pkg
+*.AppImage
+*.deb
+*.rpm
+
+# Package Archives & Extension Packages
+*.zip
+*.7z
+*.tar.gz
+*.blockmap
+*.crx
+*.xpi
+
+# Extensions (not included in releases repo)
+*-Extension*
+extension/
+dist-extension/
+
+# Environment & Builds
+.env
+.env.*
+node_modules/
+dist/
+dist-*/
+release/
+
+# OS and Editor junk
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
