@@ -16,14 +16,14 @@ GITE_NV saves reusable configuration profiles for your applications and microser
 
 ---
 
-## Downloads (Windows Desktop)
+## Downloads (Official Windows Desktop Release)
 
-| Release Asset | File | Size | Type |
+| Release Asset | Direct Download | File Size | Description |
 |---|---|---|---|
-| **Windows Setup Installer** | `GITE_NV Setup 0.0.2.exe` | ~120 MB | Full NSIS Installer with Start Menu & Shortcuts |
-| **Windows Portable** | `GITE_NV-Portable-0.0.2.exe` | ~120 MB | Zero-install standalone executable |
+| **Windows Setup Installer (Recommended)** | [Download GITE_NV Setup v0.0.2](https://github.com/nourddinak/GITE_NV-releases/releases/latest/download/GITE_NV.Setup.0.0.2.exe) | ~120 MB | Full NSIS installer with desktop shortcuts, Start Menu entry, and auto-updates |
+| **All Tagged Releases** | [GitHub Releases Hub](https://github.com/nourddinak/GITE_NV-releases/releases) | — | Checksums, release notes, and all binaries |
 
-> **Note**: Binary executables are excluded from Git tracking via `.gitignore` because GitHub limits commits to 100MB. Binary releases are published as GitHub Release assets.
+> **Note**: Binary executables are excluded from Git repository tracking via `.gitignore` (staying under GitHub's 100MB limit). Binaries are published and distributed through GitHub Releases.
 
 ---
 
